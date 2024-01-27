@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import json
 
-def generate_chapter(spell_id, trama, capitulo_numero):
+def generate_chapter(spell_id, indice, trama, capitulo_numero):
     response = requests.post(
         "https://api.respell.ai/v1/run",
         headers={
@@ -13,7 +13,7 @@ def generate_chapter(spell_id, trama, capitulo_numero):
         data=json.dumps({
             "spellId": spell_id,
             "inputs": {
-                "ndice": "", # Este campo no se usa
+                "ndice": indice,
                 "cap_tulo_n_mero": capitulo_numero,
                 "trama": trama
             }
@@ -30,16 +30,17 @@ def main():
 
     spell_id = "QW3t_KZR7urqy_BbUgxV7"  # ID del hechizo a utilizar
     
+    indice = st.text_area("Introduce el índice de capítulos de tu novela:")
     trama = st.text_area("Introduce la trama de tu novela:")
     capitulo_numero = st.text_input("Introduce el número del capítulo que deseas generar:")
     
     if st.button("Generar Capítulo"):
-        if trama and capitulo_numero:
-            chapter_content = generate_chapter(spell_id, trama, capitulo_numero)
+        if indice and trama and capitulo_numero:
+            chapter_content = generate_chapter(spell_id, indice, trama, capitulo_numero)
             st.subheader(f"Capítulo {capitulo_numero}")
             st.write(chapter_content)
         else:
-            st.warning("Por favor, completa la trama y el número del capítulo.")
+            st.warning("Por favor, completa todos los campos.")
 
 if __name__ == "__main__":
     main()
